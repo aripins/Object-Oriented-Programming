@@ -1,18 +1,17 @@
-public class StringManipulation1 {
+public class StringManipulation {
     public static void main(String[] args) {
         String input = "NUGRAHA";
         int length = input.length();
-        
+
         for (int i = 0; i < length; i++) {
-            String output = "";
             for (int j = 0; j < length; j++) {
-                if (j < length - i) {
-                    output += input.charAt(j);
+                if (j >= length - i) {
+                    System.out.print("*");
                 } else {
-                    output += "*";
+                    System.out.print(input.charAt(j));
                 }
             }
-            System.out.println(output);
+            System.out.println();
         }
     }
 }
