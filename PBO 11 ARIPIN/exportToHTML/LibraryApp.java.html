@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>LibraryApp.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+LibraryApp.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">gson</span><span class="s2">.</span><span class="s1">reflect</span><span class="s2">.</span><span class="s1">TypeToken</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Date</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">File</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">IOException</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">LibraryApp </span><span class="s2">{</span>
+    <span class="s0">private static final </span><span class="s1">String BOOKS_FILE </span><span class="s2">= </span><span class="s3">&quot;data/books.json&quot;</span><span class="s2">;</span>
+    <span class="s0">private static final </span><span class="s1">String MEMBERS_FILE </span><span class="s2">= </span><span class="s3">&quot;data/members.json&quot;</span><span class="s2">;</span>
+    <span class="s0">private static final </span><span class="s1">String TRANSACTIONS_FILE </span><span class="s2">= </span><span class="s3">&quot;data/transactions.json&quot;</span><span class="s2">;</span>
+
+    <span class="s0">private static </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Book</span><span class="s2">&gt; </span><span class="s1">books </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private static </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Member</span><span class="s2">&gt; </span><span class="s1">members </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private static </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Transaction</span><span class="s2">&gt; </span><span class="s1">transactions </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+    <span class="s0">public static void </span><span class="s1">main</span><span class="s2">(</span><span class="s1">String</span><span class="s2">[] </span><span class="s1">args</span><span class="s2">) {</span>
+        <span class="s1">createJsonFilesIfNotExist</span><span class="s2">();</span>
+        <span class="s1">loadData</span><span class="s2">();</span>
+
+        <span class="s1">addBook</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Book</span><span class="s2">(</span><span class="s4">1</span><span class="s2">, </span><span class="s3">&quot;Harry Potter&quot;</span><span class="s2">, </span><span class="s3">&quot;J.K. Rowling&quot;</span><span class="s2">, </span><span class="s3">&quot;Fantasy novel&quot;</span><span class="s2">, </span><span class="s3">&quot;Fantasy&quot;</span><span class="s2">, </span><span class="s4">10</span><span class="s2">, </span><span class="s0">false</span><span class="s2">));</span>
+        <span class="s1">addMember</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Member</span><span class="s2">(</span><span class="s4">1</span><span class="s2">, </span><span class="s3">&quot;John Doe&quot;</span><span class="s2">, </span><span class="s3">&quot;1234567890&quot;</span><span class="s2">, </span><span class="s3">&quot;john.doe@example.com&quot;</span><span class="s2">, </span><span class="s3">&quot;123 Elm St&quot;</span><span class="s2">));</span>
+        <span class="s1">addTransaction</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Transaction</span><span class="s2">(</span><span class="s4">1</span><span class="s2">, </span><span class="s0">new </span><span class="s1">Date</span><span class="s2">(), </span><span class="s4">1</span><span class="s2">, </span><span class="s4">1</span><span class="s2">, </span><span class="s4">1</span><span class="s2">));</span>
+
+        <span class="s1">saveData</span><span class="s2">();</span>
+
+        <span class="s5">// Output data ke konsol</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s3">&quot;Books: &quot; </span><span class="s2">+ </span><span class="s1">books</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s3">&quot;Members: &quot; </span><span class="s2">+ </span><span class="s1">members</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s3">&quot;Transactions: &quot; </span><span class="s2">+ </span><span class="s1">transactions</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">createJsonFilesIfNotExist</span><span class="s2">() {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">File booksFile </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s1">BOOKS_FILE</span><span class="s2">);</span>
+            <span class="s1">File membersFile </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s1">MEMBERS_FILE</span><span class="s2">);</span>
+            <span class="s1">File transactionsFile </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s1">TRANSACTIONS_FILE</span><span class="s2">);</span>
+
+            <span class="s0">if </span><span class="s2">(!</span><span class="s1">booksFile</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+                <span class="s1">booksFile</span><span class="s2">.</span><span class="s1">getParentFile</span><span class="s2">().</span><span class="s1">mkdirs</span><span class="s2">(); </span><span class="s5">// Buat direktori jika belum ada</span>
+                <span class="s1">booksFile</span><span class="s2">.</span><span class="s1">createNewFile</span><span class="s2">();</span>
+                <span class="s1">Utils</span><span class="s2">.</span><span class="s1">writeJsonFile</span><span class="s2">(</span><span class="s1">BOOKS_FILE</span><span class="s2">, </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Book</span><span class="s2">&gt;());</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(!</span><span class="s1">membersFile</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+                <span class="s1">membersFile</span><span class="s2">.</span><span class="s1">createNewFile</span><span class="s2">();</span>
+                <span class="s1">Utils</span><span class="s2">.</span><span class="s1">writeJsonFile</span><span class="s2">(</span><span class="s1">MEMBERS_FILE</span><span class="s2">, </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Member</span><span class="s2">&gt;());</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(!</span><span class="s1">transactionsFile</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+                <span class="s1">transactionsFile</span><span class="s2">.</span><span class="s1">createNewFile</span><span class="s2">();</span>
+                <span class="s1">Utils</span><span class="s2">.</span><span class="s1">writeJsonFile</span><span class="s2">(</span><span class="s1">TRANSACTIONS_FILE</span><span class="s2">, </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Transaction</span><span class="s2">&gt;());</span>
+            <span class="s2">}</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+            <span class="s1">e</span><span class="s2">.</span><span class="s1">printStackTrace</span><span class="s2">();</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">loadData</span><span class="s2">() {</span>
+        <span class="s1">books </span><span class="s2">= </span><span class="s1">Utils</span><span class="s2">.</span><span class="s1">readJsonFile</span><span class="s2">(</span><span class="s1">BOOKS_FILE</span><span class="s2">, </span><span class="s0">new </span><span class="s1">TypeToken</span><span class="s2">&lt;</span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Book</span><span class="s2">&gt;&gt;() {}.</span><span class="s1">getType</span><span class="s2">());</span>
+        <span class="s1">members </span><span class="s2">= </span><span class="s1">Utils</span><span class="s2">.</span><span class="s1">readJsonFile</span><span class="s2">(</span><span class="s1">MEMBERS_FILE</span><span class="s2">, </span><span class="s0">new </span><span class="s1">TypeToken</span><span class="s2">&lt;</span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Member</span><span class="s2">&gt;&gt;() {}.</span><span class="s1">getType</span><span class="s2">());</span>
+        <span class="s1">transactions </span><span class="s2">= </span><span class="s1">Utils</span><span class="s2">.</span><span class="s1">readJsonFile</span><span class="s2">(</span><span class="s1">TRANSACTIONS_FILE</span><span class="s2">, </span><span class="s0">new </span><span class="s1">TypeToken</span><span class="s2">&lt;</span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Transaction</span><span class="s2">&gt;&gt;() {}.</span><span class="s1">getType</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">saveData</span><span class="s2">() {</span>
+        <span class="s1">Utils</span><span class="s2">.</span><span class="s1">writeJsonFile</span><span class="s2">(</span><span class="s1">BOOKS_FILE</span><span class="s2">, </span><span class="s1">books</span><span class="s2">);</span>
+        <span class="s1">Utils</span><span class="s2">.</span><span class="s1">writeJsonFile</span><span class="s2">(</span><span class="s1">MEMBERS_FILE</span><span class="s2">, </span><span class="s1">members</span><span class="s2">);</span>
+        <span class="s1">Utils</span><span class="s2">.</span><span class="s1">writeJsonFile</span><span class="s2">(</span><span class="s1">TRANSACTIONS_FILE</span><span class="s2">, </span><span class="s1">transactions</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">addBook</span><span class="s2">(</span><span class="s1">Book book</span><span class="s2">) {</span>
+        <span class="s1">books</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">book</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">addMember</span><span class="s2">(</span><span class="s1">Member member</span><span class="s2">) {</span>
+        <span class="s1">members</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">member</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">addTransaction</span><span class="s2">(</span><span class="s1">Transaction transaction</span><span class="s2">) {</span>
+        <span class="s1">transactions</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">transaction</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
